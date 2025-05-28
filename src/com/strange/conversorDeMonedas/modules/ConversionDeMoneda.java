@@ -1,16 +1,10 @@
 package com.strange.conversorDeMonedas.modules;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import java.util.Arrays;
 import java.util.List;
 
 public class ConversionDeMoneda {
     List<String> listaDeMonedas = Arrays.asList("monedaBase", "monedaDestino");
-    String monedaBase, monedaDestino;
-    double valorEquivalente = 0.0;
-
     public void seleccionarOpcion(int opcion){
         switch (opcion){
             case 1 -> {
@@ -37,25 +31,20 @@ public class ConversionDeMoneda {
                 listaDeMonedas.set(0,"COP");
                 listaDeMonedas.set(1,"USD");
             }
-            case 7 -> System.out.println("El programa finalizo");
+            case 7 -> {
+                System.out.println("El programa finalizo");
+                System.exit(0);
+            }
         }
-
-        monedaBase = listaDeMonedas.get(0);
-        monedaDestino= listaDeMonedas.get(1);
-
-        ConexionAPI conexionAPI = new ConexionAPI();
-
-        JsonObject json = JsonParser.parseString(conexionAPI.conectarAPI(monedaBase).toString()).getAsJsonObject();
-        //System.out.println(json);
-        valorEquivalente = json.get(monedaDestino).getAsDouble();
     }
 
-    public Double conversion(double valorACambiar){
-        Double montoFinal =  valorACambiar * valorEquivalente;
-        Double montoFinalRedondeado = Math.round(montoFinal * 100.0) / 100.0;
-        //System.out.println("1 "+monedaBase+" equivale a "+String.format("%.8f",valorEquivalente)+" "+monedaDestino);
-        //System.out.print(valorACambiar+" x "+valorEquivalente+" = ");
-        return montoFinalRedondeado;
+    public String conversion(double valorACambiar){
+        String monedaBase = listaDeMonedas.get(0);
+        String monedaDestino = listaDeMonedas.get(1);
+        Double valorEquivalente = new ConexionAPI().conectarAPI(monedaBase, monedaDestino);
+        double montoFinal =  valorACambiar * valorEquivalente;
+        double montoFinalRedondeado = Math.round(montoFinal * 100.0) / 100.0;
+        return "El valor "+valorACambiar+" ["+monedaBase+"] corresponde al valor final de ==> "+montoFinalRedondeado+" ["+monedaDestino+"]";
     }
 
 
