@@ -22,9 +22,8 @@ public class Conversor {
                 Elija una opción valida: """);
     }
 
-    List<String> listaDeMonedas = Arrays.asList("monedaBase", "monedaDestino");
-    public boolean seleccionarOpcion(Scanner scanner){
-        int opcion = scanner.nextInt();
+    private List<String> listaDeMonedas = Arrays.asList("monedaBase", "monedaDestino");
+    public boolean seleccionarOpcion(int opcion){
         switch (opcion){
             case 1 -> {
                 listaDeMonedas.set(0,"USD");
@@ -58,10 +57,6 @@ public class Conversor {
                 return true;
             }
         }
-
-        System.out.print("\nIngrese el monto que desea convertir: ");
-        double monto = scanner.nextDouble();
-        System.out.println(conversion(monto));
         return true;
     }
 
