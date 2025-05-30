@@ -11,7 +11,11 @@ public class Principal {
         boolean opcion = true;
         while (opcion){
             Conversor.exhibirMenu();
-            opcion = conversor.seleccionarOpcion(scanner);
+            opcion = conversor.seleccionarOpcion(scanner.nextInt());
+            if (opcion){
+                System.out.print("\nIngrese el monto que desea convertir: ");
+                System.out.println(conversor.conversion(scanner.nextDouble()));
+            }
         }
         scanner.close();
     }
