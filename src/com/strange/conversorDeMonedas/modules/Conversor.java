@@ -2,10 +2,29 @@ package com.strange.conversorDeMonedas.modules;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
-public class ConversionDeMoneda {
+public class Conversor {
+    public static void exhibirMenu(){
+        System.out.print("""
+                ***********************************************
+                Sea bienvenido/a al Conversor de Moneda =]
+                ***********************************************
+                OPCIONES:
+                1) Dólar =>> Peso argentino
+                2) Peso argentino =>> Dólar
+                3) Dólar =>> Real brasileño
+                4) Real Brasileño =>> Dólar
+                5) Dólar =>> Peso colombiano
+                6) Peso colombiano ==> Dólar
+                7) Salir
+                ***********************************************
+                Elija una opción valida: """);
+    }
+
     List<String> listaDeMonedas = Arrays.asList("monedaBase", "monedaDestino");
-    public void seleccionarOpcion(int opcion){
+    public boolean seleccionarOpcion(Scanner scanner){
+        int opcion = scanner.nextInt();
         switch (opcion){
             case 1 -> {
                 listaDeMonedas.set(0,"USD");
@@ -33,9 +52,17 @@ public class ConversionDeMoneda {
             }
             case 7 -> {
                 System.out.println("El programa finalizo");
-                System.exit(0);
+                return false;
+            } default -> {
+                System.out.println("Opcion invalida, ingrese una opcion");
+                return true;
             }
         }
+
+        System.out.print("\nIngrese el monto que desea convertir: ");
+        double monto = scanner.nextDouble();
+        System.out.println(conversion(monto));
+        return true;
     }
 
     public String conversion(double valorACambiar){
