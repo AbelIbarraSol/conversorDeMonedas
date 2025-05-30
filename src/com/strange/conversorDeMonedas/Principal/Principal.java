@@ -1,11 +1,26 @@
 package com.strange.conversorDeMonedas.Principal;
 
-import com.strange.conversorDeMonedas.modules.ConexionAPI;
-import com.strange.conversorDeMonedas.modules.Divisa;
+import com.strange.conversorDeMonedas.modules.Conversor;
+import com.strange.conversorDeMonedas.modules.Reporte;
+
+import java.util.Scanner;
 
 public class Principal {
     public static void main(String[] args) {
-        Divisa conexionAPI = new ConexionAPI().conectarAPI("PEN");
-        System.out.println(conexionAPI);
+        Scanner scanner = new Scanner(System.in);
+        Conversor conversor = new Conversor();
+        Reporte reporte = new Reporte();
+        boolean opcion = true;
+        while (opcion){
+            Conversor.exhibirMenu();
+            opcion = conversor.seleccionarOpcion(scanner.nextInt());
+            if (opcion){
+                System.out.print("\nIngrese el monto que desea convertir: ");
+
+                reporte.almacenarReporte(conversor,scanner.nextDouble());
+                reporte.generarReporte();
+            }
+        }
+        scanner.close();
     }
 }
