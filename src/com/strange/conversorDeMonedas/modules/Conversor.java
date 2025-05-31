@@ -5,22 +5,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Conversor {
-    public static void exhibirMenu(){
-        System.out.print("""
-                ***********************************************
-                Sea bienvenido/a al Conversor de Moneda =]
-                ***********************************************
-                OPCIONES:
-                1) Dólar =>> Peso argentino
-                2) Peso argentino =>> Dólar
-                3) Dólar =>> Real brasileño
-                4) Real Brasileño =>> Dólar
-                5) Dólar =>> Peso colombiano
-                6) Peso colombiano ==> Dólar
-                7) Salir
-                ***********************************************
-                Elija una opción valida: """);
-    }
 
     private List<String> listaDeMonedas = Arrays.asList("monedaBase", "monedaDestino");
     public boolean seleccionarOpcion(int opcion){

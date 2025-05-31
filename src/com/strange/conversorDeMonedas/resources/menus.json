@@ -1,0 +1,43 @@
+{
+  "menuAgregarDivisas": [
+    "*************************************************",
+    "*            Agregar Nuevas Divisas             *",
+    "*************************************************",
+    "1. Ingresar nueva divisa",
+    "0. Atras",
+    "*************************************************",
+    "Ingrese el codigo de divisa:"
+  ],
+  "menuPrincipal": [
+    "*************************************************",
+    "*   Sea bienvenido/a al Conversor de Moneda =]  *",
+    "*************************************************",
+    "1. Conversor de Moneda",
+    "2. Historial de Conversiones",
+    "3. Ampliar Monedas",
+    "4. Salir"
+  ],
+  "menuConversor":[
+    "*************************************************",
+    "*             Conversor de Monedas              *",
+    "*************************************************",
+    "1) Dólar =>> Peso argentino",
+    "2) Peso argentino =>> Dólar",
+    "3) Dólar =>> Real brasileño",
+    "4) Real Brasileño =>> Dólar",
+    "5) Dólar =>> Peso colombiano",
+    "6) Peso colombiano ==> Dólar",
+    "0) Atras",
+    "*************************************************",
+    "Elija una opción valida:"
+  ],
+  "menuHistorial": [
+    "*************************************************",
+    "*           Historial de Conversiones           *",
+    "*************************************************",
+    "1. Ver historial de conversiones",
+    "0. Atras",
+    "*************************************************",
+    "Descripcion                                 Fecha"
+  ]
+}
