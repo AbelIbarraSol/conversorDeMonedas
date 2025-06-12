@@ -6,7 +6,7 @@ import java.util.List;
 public class Reporte {
     private List<String> listaDeConversiones = new ArrayList<>();
     public void almacenarReporte(Conversor conversor,double valorACambiar){
-        listaDeConversiones.add(conversor.conversion(valorACambiar));
+        //listaDeConversiones.add(conversor.convertirMoneda(valorACambiar));
     }
 
     public void generarReporte(){
