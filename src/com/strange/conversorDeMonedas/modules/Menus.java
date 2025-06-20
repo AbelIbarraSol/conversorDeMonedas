@@ -2,37 +2,80 @@ package com.strange.conversorDeMonedas.modules;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Scanner;
 
 public class Menus {
-    private JsonObject jsonObject;
-    private List<String> listaDeMenus = Arrays.asList("menuPrincipal","menuConversor","menuHistorial","menuAgregarDivisas");
-    public Menus(){
-        //Constructor vacio el try catch se ejecuta al instanciar la clase.
-        try {
-            //Buscar Json con los menus almacenados y transformarlos en un JsonObject
-            String jsonMenus = Files.readString(Paths.get("src/com/strange/conversorDeMonedas/resources/menus.json"));
-            jsonObject = JsonParser.parseString(jsonMenus).getAsJsonObject();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private JsonArray jsonArray;
+
+    public Menus(String clave){
+        jsonArray = new JSONManager("menus.json").convertirAJsonArray(clave);
+        for (JsonElement e : jsonArray) {
+            System.out.println(e.getAsString());
         }
     }
 
-    public void exhibirMenus(int index){
-        JsonArray jsonArray = jsonObject.getAsJsonArray(listaDeMenus.get(index));
-        List<String> menu = new ArrayList<>();
-        for (JsonElement e : jsonArray) menu.add(e.getAsString());
-        for (String linea : menu) System.out.println(linea);
+    public boolean iniciarMenuConversor(Scanner scanner){
+        Conversor  conversor = new Conversor();
+        while (true){
+            if (conversor.escogerMonedaBase(scanner)){
+                return false;
+            }else {
+                System.out.println(conversor.convertirMoneda(scanner));
+            } return true;
+        }
+    }
+
+    public boolean iniciarMenuAgregarMonedas(Scanner scanner){
+        while (true){
+            System.out.print("Ingrese una opcion: ");
+            switch (scanner.nextLine().toLowerCase()){
+                case "1" -> {
+                    new Menus("menuListarDivisas");
+                    new Conversor().listarMonedas();
+                    return true;
+                }
+                case "2" -> {
+                    new Menus("menuAgregarDivisas");
+                    if(!new JSONManager("monedas.json").agregarDatosAlJson(scanner)){
+                        return true;
+                    }
+                }
+                case "atras" -> {
+                    return false;
+                }
+                default -> System.out.println("¡No se encontro la opcion! Vuelva a ingresar una opcion de la lista.");
+            }
+        }
+    }
+
+    public void iniciarProyecto(Scanner scanner){
+        boolean continuar = true;
+        while (continuar){
+            System.out.print("Ingrese una opcion: ");
+            int seleccion = Integer.parseInt(scanner.nextLine());
+            if (seleccion == 0) {
+                System.out.println("El programa finalizo");
+                continuar = false;
+                break;
+            }
+            boolean seguir = true;
+            while (seguir){
+                switch (seleccion) {
+                    case 1 -> {
+                        if(!new Menus("menuConversor").iniciarMenuConversor(scanner)) seguir = false;
+                    }
+                    case 2 -> {
+                        if(!new Menus("menuDivisas").iniciarMenuAgregarMonedas(scanner)) seguir = false;
+                    }
+                    case 3 -> {}
+                    default -> {
+                        System.out.println("hola");
+                        seguir = false;
+                    }
+                }
+            }
+            new Menus("menuPrincipal");
+        } scanner.close();
     }
 }

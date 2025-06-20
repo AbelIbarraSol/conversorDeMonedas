@@ -1,3 +1,9 @@
 {
-  "monedas": ["USD", "ARS", "BRL", "COP"]
+  "monedas": [
+    "USD",
+    "ARS",
+    "BRL",
+    "COP",
+    "PEN"
+  ]
 }
