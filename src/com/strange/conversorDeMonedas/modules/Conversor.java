@@ -1,58 +1,26 @@
 package com.strange.conversorDeMonedas.modules;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class Conversor {
     private Map<String,String> listaDeMonedas = new HashMap<>();
-    private JsonObject jsonObject;
     private JsonArray jsonArray;
     private String divisor = "──────────────────────────────────────────────────\n";
     private String atras = "⬅️ Atras";
 
     public Conversor(){
-        try {
-            String jsonMonedas = Files.readString(Paths.get("src/com/strange/conversorDeMonedas/resources/monedas.json"));
-            //Convertir json en jsonObject
-            jsonObject = JsonParser.parseString(jsonMonedas).getAsJsonObject();
-            //Extraer array "monedas" del jsonObject
-            jsonArray = jsonObject.getAsJsonArray("monedas");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        jsonArray = new JSONManager("monedas.json").convertirAJsonArray("monedas");
     }
 
-    public boolean iniciarConversor(Scanner scanner){
-        while (true){
-            new Menus().exhibirMenus(1);
-            if (escogerMonedaBase(scanner)){
-                return false;
-            }else {
-                System.out.println(convertirMoneda(scanner));
-            } return true;
-        }
-    }
-
-    public void agregarMonedas(String monedaNueva){
-        //No agrega al archivo json y falta poder comprobar con la api si es valido la moneda
-        jsonArray.add(monedaNueva);
-        jsonObject.add("monedas",jsonArray);
-    }
-
-    private void listarMonedas(){
+    public void listarMonedas(){
         String elemento;
-        System.out.println(atras);
+
         for (int i = 0; i < jsonArray.size(); i++){
             elemento = (i + 1)+". "+jsonArray.get(i).getAsString();
             System.out.println(elemento);
         }
-        System.out.print("🔸 Ingrese una opcion: ");
+
     }
 
     private void listarMonedasExcluyendo(String excluir) {
@@ -75,10 +43,11 @@ public class Conversor {
         return true;
     }
 
-    private boolean escogerMonedaBase(Scanner scanner) {
+    public boolean escogerMonedaBase(Scanner scanner) {
         while(true){
+            System.out.println(atras);
             listarMonedas();
-
+            System.out.print("🔸 Ingrese una opcion: ");
             String input = scanner.nextLine().trim();
             if (input.isEmpty()) {
                 System.out.println("Entrada vacía, intenta nuevamente.");
@@ -137,30 +106,33 @@ public class Conversor {
                 }
 
                 String monedaDestinoSeleccionada = monedasDestino.get(opcion - 1);
-
+                //System.out.println("IMPRESION MD\n"+"MONEDA BASE: "+monedaBase+" MONEDA DESTINO"+monedaDestinoSeleccionada);
                 listaDeMonedas.put("MonedaBase", monedaBase);
                 listaDeMonedas.put("MonedaDestino", monedaDestinoSeleccionada);
+                //System.out.println("IMPRESION LISTA DE MONEDAS ESCOGIDAS\n"+listaDeMonedas);
 
-                return false; // Finaliza correctamente y permite avanzar
+                return false;
             } catch (NumberFormatException e) {
                 System.out.println("Formato inválido. Ingresa un número válido.");
             }
         }
     }
 
-    private String convertirMoneda(Scanner scanner){
+    public String convertirMoneda(Scanner scanner){
         System.out.print("💰 Ingrese un monto a convertir: ");
         double valorACambiar = Double.valueOf(scanner.nextLine());
+
         String monedaBase = listaDeMonedas.get("MonedaBase");
         String monedaDestino = listaDeMonedas.get("MonedaDestino");
-        Double valorEquivalente = new ConexionAPI().conectarAPI(monedaBase, monedaDestino);
+
+        Double valorEquivalente = new ConexionAPI().obtenerTasaDeConversion(monedaBase, monedaDestino);
         double montoFinal =  valorACambiar * valorEquivalente;
         double montoFinalRedondeado = Math.round(montoFinal * 100.0) / 100.0;
-        String resultado = """
-                ═════════════════════════════════════════════════════════════════════
-                  💱 El valor %.2f [%s] corresponde al valor final de ==> %.2f [%s].
-                ═════════════════════════════════════════════════════════════════════
-                """.formatted(valorACambiar,monedaBase,montoFinalRedondeado,monedaDestino);
-        return resultado;
+        return ("""
+            ═════════════════════════════════════════════════════════════════════
+              💱 El valor %.2f [%s] corresponde al valor final de ==> %.2f [%s].
+            ═════════════════════════════════════════════════════════════════════
+            """.formatted(valorACambiar,monedaBase,montoFinalRedondeado,monedaDestino));
     }
+
 }
