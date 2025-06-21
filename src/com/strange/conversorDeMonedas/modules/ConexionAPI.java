@@ -24,7 +24,7 @@ public class ConexionAPI {
                 .build();
         try {
             //Obtener la RESPUESTA como string
-            HttpResponse<String> repuesta = client.send(request, HttpResponse.BodyHandlers.ofString());
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
             throw new RuntimeException("Error en la conexión con la API"+e.getMessage());
         }
