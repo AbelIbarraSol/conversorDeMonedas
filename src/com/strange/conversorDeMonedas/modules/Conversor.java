@@ -1,6 +1,9 @@
 package com.strange.conversorDeMonedas.modules;
 
 import com.google.gson.JsonArray;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Conversor {
@@ -15,7 +18,6 @@ public class Conversor {
 
     public void listarMonedas(){
         String elemento;
-
         for (int i = 0; i < jsonArray.size(); i++){
             elemento = (i + 1)+". "+jsonArray.get(i).getAsString();
             System.out.println(elemento);
@@ -118,7 +120,7 @@ public class Conversor {
         }
     }
 
-    public String convertirMoneda(Scanner scanner){
+    public void convertirMoneda(Scanner scanner){
         System.out.print("💰 Ingrese un monto a convertir: ");
         double valorACambiar = Double.valueOf(scanner.nextLine());
 
@@ -128,11 +130,16 @@ public class Conversor {
         Double valorEquivalente = new ConexionAPI().obtenerTasaDeConversion(monedaBase, monedaDestino);
         double montoFinal =  valorACambiar * valorEquivalente;
         double montoFinalRedondeado = Math.round(montoFinal * 100.0) / 100.0;
-        return ("""
-            ═════════════════════════════════════════════════════════════════════
-              💱 El valor %.2f [%s] corresponde al valor final de ==> %.2f [%s].
-            ═════════════════════════════════════════════════════════════════════
-            """.formatted(valorACambiar,monedaBase,montoFinalRedondeado,monedaDestino));
+
+        String conversion = "%.2f [%s] ➡ %.2f [%s]".formatted(valorACambiar,monedaBase,montoFinalRedondeado,monedaDestino);
+
+        // Captura el instante actual
+        LocalDateTime horaActual= LocalDateTime.now();
+        new JSONManager("historial.json").almacenarReporte(conversion,horaActual);
+        String mensaje = "💱 El valor %.2f [%s] corresponde al valor final de ==> %.2f [%s]".formatted(valorACambiar,monedaBase,montoFinalRedondeado,monedaDestino);
+        System.out.println("═".repeat(mensaje.length()));
+        System.out.println(mensaje);
+        System.out.println("═".repeat(mensaje.length()));
     }
 
 }

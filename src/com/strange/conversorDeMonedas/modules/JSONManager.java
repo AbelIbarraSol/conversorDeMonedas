@@ -5,8 +5,9 @@ import com.google.gson.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Scanner;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class JSONManager {
     private JsonObject jsonObject;
@@ -29,11 +30,7 @@ public class JSONManager {
         return jsonArray = jsonObject.getAsJsonArray(key);
     }
 
-    public Set<String> obtenerClaves() {
-        return jsonObject.keySet();
-    }
-
-    public boolean agregarDatosAlJson(Scanner scanner){
+    public boolean agregarMonedas(Scanner scanner){
         while(true){
             System.out.print("🔸 Ingrese el codigo de divisa: ");
             String input = scanner.nextLine();
@@ -90,6 +87,42 @@ public class JSONManager {
                     throw new RuntimeException(e);
                 }
             }
+        }
+    }
+
+    public void almacenarReporte(String conversionRealizada, LocalDateTime horaDeConversion){
+        //Formato
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        horaDeConversion.format(formato);
+        jsonArray = convertirAJsonArray("conversiones");
+
+        JsonArray nuevaConversion = new JsonArray();
+        nuevaConversion.add(conversionRealizada);
+        nuevaConversion.add(horaDeConversion.format(formato));
+
+        jsonArray.add(nuevaConversion);
+
+
+        jsonObject.add("conversiones",jsonArray);
+
+        String jsonActualizado = gson.toJson(jsonObject);
+
+        try {
+            //INSERTAR jsonobject en archivo
+            Files.writeString(Paths.get(ruta+"historial.json"), jsonActualizado );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void generarReporte(){
+        jsonArray = convertirAJsonArray("conversiones");
+        for (int i = 0; i < jsonArray.size(); i++){
+            JsonArray elements = jsonArray.get(i).getAsJsonArray();
+            String descripcion = elements.get(0).getAsString();
+            String fecha = elements.get(1).getAsString();
+            System.out.printf("%-50s %-50s\n",descripcion,fecha);
         }
     }
 }

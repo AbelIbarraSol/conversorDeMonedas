@@ -15,18 +15,18 @@ public class Menus {
         }
     }
 
-    public boolean iniciarMenuConversor(Scanner scanner){
+    private boolean iniciarMenuConversor(Scanner scanner){
         Conversor  conversor = new Conversor();
         while (true){
             if (conversor.escogerMonedaBase(scanner)){
                 return false;
             }else {
-                System.out.println(conversor.convertirMoneda(scanner));
+                conversor.convertirMoneda(scanner);
             } return true;
         }
     }
 
-    public boolean iniciarMenuAgregarMonedas(Scanner scanner){
+    private boolean iniciarMenuAgregarMonedas(Scanner scanner){
         while (true){
             System.out.print("Ingrese una opcion: ");
             switch (scanner.nextLine().toLowerCase()){
@@ -37,7 +37,7 @@ public class Menus {
                 }
                 case "2" -> {
                     new Menus("menuAgregarDivisas");
-                    if(!new JSONManager("monedas.json").agregarDatosAlJson(scanner)){
+                    if(!new JSONManager("monedas.json").agregarMonedas(scanner)){
                         return true;
                     }
                 }
@@ -47,6 +47,11 @@ public class Menus {
                 default -> System.out.println("¡No se encontro la opcion! Vuelva a ingresar una opcion de la lista.");
             }
         }
+    }
+
+    private boolean iniciarMenuHistorial(Scanner scanner){
+        new JSONManager("historial.json").generarReporte();
+        return false;
     }
 
     public void iniciarProyecto(Scanner scanner){
@@ -68,7 +73,9 @@ public class Menus {
                     case 2 -> {
                         if(!new Menus("menuDivisas").iniciarMenuAgregarMonedas(scanner)) seguir = false;
                     }
-                    case 3 -> {}
+                    case 3 -> {
+                        if (!new Menus("menuHistorial").iniciarMenuHistorial(scanner)) seguir = false;
+                    }
                     default -> {
                         System.out.println("hola");
                         seguir = false;
