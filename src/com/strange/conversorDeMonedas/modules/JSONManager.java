@@ -48,7 +48,7 @@ public class JSONManager {
                 return false;
             }
 
-            if(!new ConexionAPI().comprobarExistenciaDeMoneda(input.toUpperCase())){
+            if(!new APIFactory().getAPISeleccionada().buscarMoneda(input.toUpperCase())){
                 System.out.println("🚨 El codigo ingresado no pertenece a una moneda real");
                 continue;
             }
@@ -102,7 +102,6 @@ public class JSONManager {
 
         jsonArray.add(nuevaConversion);
 
-
         jsonObject.add("conversiones",jsonArray);
 
         String jsonActualizado = gson.toJson(jsonObject);
@@ -123,6 +122,83 @@ public class JSONManager {
             String descripcion = elements.get(0).getAsString();
             String fecha = elements.get(1).getAsString();
             System.out.printf("%-50s %-50s\n",descripcion,fecha);
+        }
+    }
+
+    public void almacenarKEYEnJSON(String api,String key){
+        JsonObject listaDeAPIs = jsonObject.getAsJsonObject("api-key");
+        listaDeAPIs.addProperty(api, key);
+        jsonObject.add("api-key",listaDeAPIs);
+        String jsonObjectActualizado = gson.toJson(jsonObject);
+        try {
+            Files.writeString(Paths.get(ruta+"apiConfiguration.json"), jsonObjectActualizado );
+            System.out.println("✅ ¡API Key guardada!");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean agregarAPIKey(int opcion, String api, Scanner scanner){
+        while (true){
+            System.out.print("Ingrese el API Key de "+api+": ");
+            String input = scanner.nextLine();
+            if (input.equalsIgnoreCase("atras")) return false;
+            switch (opcion){
+                case 1 ->{
+                    if (new APIExchange().buscarAPIKey(input)){
+                        almacenarKEYEnJSON(api, input);
+                        return false;
+                    } else {
+                        System.out.println("🚨 La API KEY ingresada no es valida. 🚨\nVuelve a ingresar la API KEY correcta o comunicate con %s".formatted(api));
+                    }
+                }
+                case 2 ->{
+                    if (new APIOpenExchangeRates().buscarAPIKey(input)){
+                        almacenarKEYEnJSON(api, input);
+                        return false;
+                    } else {
+                        System.out.println("🚨 La API KEY ingresada no es valida. 🚨\nVuelve a ingresar la API KEY correcta o comunicate con %s".formatted(api));
+                    }
+                }
+            }
+        }
+    }
+
+    public String comprobarAPIKeyAlmacenada(String api){
+        String key = obtenerAPIKey(api);
+        if (key == null || key.isEmpty()){
+            throw new IllegalStateException("No se encontro una API key valida para "+api+". Registra una api en el programa antes de continuar.");
+        }
+        return key;
+    }
+
+    public String obtenerAPIKey(String api){
+        JsonObject listaDeAPIs = jsonObject.getAsJsonObject("api-key");
+        return listaDeAPIs.get(api).getAsString();
+    }
+
+    public String obtenerAPISeleccionada(){
+        JsonElement jsonElement = jsonObject.get("api-selected");
+        String apiSeleccionada = jsonElement.getAsString();
+        if (apiSeleccionada.isEmpty()) {
+            System.out.println("""
+        🚨¡API NO SELECCIONADA!🚨
+        🟣 Pasos para seleccionar una API predeterminada:
+        1. Dirígete al Menú Principal.
+        2. Selecciona la opción [4. Lista de APIs disponibles].
+        3. Elige la API que desees utilizar.
+        4. Finalmente, selecciona la opción [3.Establecer como API predeterminada].""");
+        }
+        return apiSeleccionada;
+    }
+    public void seleccionarAPIPredeterminada(String api){
+        jsonObject.addProperty("api-selected", api);
+        String jsonObjectActualizado = gson.toJson(jsonObject);
+        try {
+            Files.writeString(Paths.get(ruta+"apiConfiguration.json"), jsonObjectActualizado );
+            System.out.println("✅ ¡Se establecio la API de "+api+" como predeterminada!");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

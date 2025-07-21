@@ -47,7 +47,7 @@ public class Conversor {
 
     public boolean escogerMonedaBase(Scanner scanner) {
         while(true){
-            System.out.println(atras);
+            System.out.println(divisor+atras);
             listarMonedas();
             System.out.print("🔸 Ingrese una opcion: ");
             String input = scanner.nextLine().trim();
@@ -106,13 +106,9 @@ public class Conversor {
                 if (!validarOpcion(opcion)) {
                     continue;
                 }
-
                 String monedaDestinoSeleccionada = monedasDestino.get(opcion - 1);
-                //System.out.println("IMPRESION MD\n"+"MONEDA BASE: "+monedaBase+" MONEDA DESTINO"+monedaDestinoSeleccionada);
                 listaDeMonedas.put("MonedaBase", monedaBase);
                 listaDeMonedas.put("MonedaDestino", monedaDestinoSeleccionada);
-                //System.out.println("IMPRESION LISTA DE MONEDAS ESCOGIDAS\n"+listaDeMonedas);
-
                 return false;
             } catch (NumberFormatException e) {
                 System.out.println("Formato inválido. Ingresa un número válido.");
@@ -120,26 +116,35 @@ public class Conversor {
         }
     }
 
-    public void convertirMoneda(Scanner scanner){
-        System.out.print("💰 Ingrese un monto a convertir: ");
-        double valorACambiar = Double.valueOf(scanner.nextLine());
+    public boolean convertirMoneda(Scanner scanner){
+        while (true){
+            System.out.print("💰 Ingrese un monto a convertir: ");
+            String input = scanner.nextLine();
+            if (input.isEmpty()) {
+                System.out.println("Entrada vacía, intenta nuevamente.");
+                continue;
+            }
+            try{
+                double valorACambiar = Double.valueOf(input);
+                String monedaBase = listaDeMonedas.get("MonedaBase");
+                String monedaDestino = listaDeMonedas.get("MonedaDestino");
+                //Llamar metodo segun la api seleccionada
+                Double valorEquivalente = new APIFactory().getAPISeleccionada().obtenerTasaDeConversion(monedaBase,monedaDestino);
+                double montoFinal =  valorACambiar * valorEquivalente;
+                double montoFinalRedondeado = Math.round(montoFinal * 100.0) / 100.0;
 
-        String monedaBase = listaDeMonedas.get("MonedaBase");
-        String monedaDestino = listaDeMonedas.get("MonedaDestino");
+                String conversion = "%.2f [%s] ➡ %.2f [%s]".formatted(valorACambiar,monedaBase,montoFinalRedondeado,monedaDestino);
 
-        Double valorEquivalente = new ConexionAPI().obtenerTasaDeConversion(monedaBase, monedaDestino);
-        double montoFinal =  valorACambiar * valorEquivalente;
-        double montoFinalRedondeado = Math.round(montoFinal * 100.0) / 100.0;
-
-        String conversion = "%.2f [%s] ➡ %.2f [%s]".formatted(valorACambiar,monedaBase,montoFinalRedondeado,monedaDestino);
-
-        // Captura el instante actual
-        LocalDateTime horaActual= LocalDateTime.now();
-        new JSONManager("historial.json").almacenarReporte(conversion,horaActual);
-        String mensaje = "💱 El valor %.2f [%s] corresponde al valor final de ==> %.2f [%s]".formatted(valorACambiar,monedaBase,montoFinalRedondeado,monedaDestino);
-        System.out.println("═".repeat(mensaje.length()));
-        System.out.println(mensaje);
-        System.out.println("═".repeat(mensaje.length()));
+                // Captura el instante actual
+                LocalDateTime horaActual= LocalDateTime.now();
+                new JSONManager("historial.json").almacenarReporte(conversion,horaActual);
+                String mensaje = "💱 El valor %.2f [%s] corresponde al valor final de ==> %.2f [%s]".formatted(valorACambiar,monedaBase,montoFinalRedondeado,monedaDestino);
+                String marco = "═".repeat(mensaje.length());
+                System.out.println(marco+"\n"+mensaje+"\n"+marco);
+                return false;
+            }catch (NumberFormatException e){
+                throw new RuntimeException("Formato inválido. Ingresa un número válido. "+e);
+            }
+        }
     }
-
 }
