@@ -1,5 +1,4 @@
-
-<h1 align="center">Money Strange - Conversor de Monedas</h1>
+![Conejo Cambista](src/com/strange/conversorDeMonedas/assets/banner.png)
 
 Aplicación de consola en Java que permite convertir monedas en tiempo real utilizando distintas APIs públicas. El sistema está diseñado con principios de programación orientada a objetos.
 
