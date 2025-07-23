@@ -20,11 +20,11 @@ o [:arrow_down: Descarga el proyecto](https://github.com/AbelIbarraSol/conversor
 6. Marca la API como predeterminada para poder realizar conversiones, seleccionando la opción **[ 3. Seleccionar como API predeterminada ]**.
 
 ## ¿Qué cosas puedo hacer con Money Strange?
-1. Convertir monedas usando la API de Exchange de tu preferencia.
+1. Convertir monedas usando la API de Exchange de tu preferencia.<br>
 ![Prueba de Conversor](src/com/strange/conversorDeMonedas/assets/DemoConversor.gif)
-2. Agregar las monedas de tu preferencia.
+2. Agregar las monedas de tu preferencia.<br>
 ![Prueba de Conversor](src/com/strange/conversorDeMonedas/assets/DemoAgregarMonedas.gif)
-3. Visualizar el historial de las conversiones que has realizado.
+3. Visualizar el historial de las conversiones que has realizado.<br>
 ![Prueba de Reporte de Conversiones](src/com/strange/conversorDeMonedas/assets/DemoObtenerReporte.gif)
 
 ## :clipboard: Requisitos previos
@@ -46,6 +46,6 @@ El presente proyecto esta bajo la licencia del [MIT](https://choosealicense.com/
 ## :bust_in_silhouette: Autor
 [@AbelIbarraSol](https://github.com/AbelIbarraSol) aka **MrStrange**.
 
-## :busts_in_silhouette: Contribuciones
+## :raised_hands: Contribuciones
 
 ¡Tus contribuciones son bienvenidas <3!<br>Puedes hacer un fork del repositorio y enviar un pull request.
