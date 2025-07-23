@@ -7,7 +7,7 @@
     "1. Conversor de Moneda",
     "2. Agregar Monedas",
     "3. Historial de Conversiones",
-    "4. Lista de APIs Disponibles",
+    "4. Lista de APIs disponibles",
     "0. Salir",
     "══════════════════════════《✧》══════════════════════════"
   ],
@@ -63,7 +63,7 @@
     "                          ExchangeRate                          ",
     "╚════════════════════════════ ⋆★⋆ ════════════════════════════╝",
     "1. Visualizar KEY",
-    "2. Reguistrar o modificar KEY",
+    "2. Registrar o modificar KEY",
     "3. Seleccionar como API predeterminada",
     "🔙Escribe Atras, para regresar al menú anterior",
     "═══════════════════════════════════════════════════════════════"
@@ -73,7 +73,7 @@
     "                        OpenExchangeRates                       ",
     "╚════════════════════════════ ⋆★⋆ ════════════════════════════╝",
     "1. Visualizar KEY",
-    "2. Reguistrar o modificar KEY",
+    "2. Registrar o modificar KEY",
     "3. Seleccionar como API predeterminada",
     "🔙Escribe Atras, para regresar al menú anterior",
     "═══════════════════════════════════════════════════════════════"
